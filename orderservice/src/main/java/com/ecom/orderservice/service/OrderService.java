@@ -12,6 +12,7 @@ import io.micrometer.observation.ObservationRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -30,7 +31,7 @@ public class OrderService {
    private final WebClient.Builder webClientBuilder;
     private final ObservationRegistry observationRegistry;
     private final ApplicationEventPublisher applicationEventPublisher;
-
+//private final KafkaTemplate kafkaTemplate;
     public String placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
@@ -65,6 +66,7 @@ public class OrderService {
 
             if (allProductsInStock) {
                 orderRepository.save(order);
+                //kafkaTemplate.send("notification topic",new OrderPlacedEvent(order.getOrderNumber()));
                 // publish Order Placed Event
                 applicationEventPublisher.publishEvent(new OrderPlacedEvent(this, order.getOrderNumber()));
                 return "Order Placed";

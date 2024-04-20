@@ -1,10 +1,7 @@
 package com.ecom.orderservice.event;
-
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.context.ApplicationEvent;
-@Getter
-@Setter
+@Getter @Setter
 public class OrderPlacedEvent extends ApplicationEvent {
     private String orderNumber;
 
