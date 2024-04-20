@@ -19,6 +19,7 @@
         <module>inventoryservice</module>
         <module>discoveryserver</module>
         <module>apigateway</module>
+        <module>notificationservice</module>
     </modules>
 
     <properties>
