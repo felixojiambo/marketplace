@@ -18,8 +18,9 @@
         <module>orderservice</module>
         <module>inventoryservice</module>
         <module>discoveryserver</module>
-        <module>apigateway</module>
+<!--        <module>apigateway</module>-->
         <module>notificationservice</module>
+        <module>apigatewayservice</module>
     </modules>
 
     <properties>

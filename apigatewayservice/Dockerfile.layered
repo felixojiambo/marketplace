@@ -1,0 +1,29 @@
+# Use OpenJDK 21 as the base image
+FROM openjdk:21 as builder
+
+# Set the working directory
+WORKDIR /extracted
+
+# Copy the JAR file from the target directory to the working directory
+COPY target/*.jar app.jar
+
+# Extract the JAR file to prepare for the final image
+RUN java -Djarmode=layertools -jar app.jar extract
+
+# Use OpenJDK 21 as the base image for the final image
+FROM openjdk:21
+
+# Set the working directory
+WORKDIR /application
+
+# Copy the extracted dependencies, spring-boot-loader, snapshot-dependencies, and application from the builder stage
+COPY --from=builder /extracted/dependencies/ ./
+COPY --from=builder /extracted/spring-boot-loader/ ./
+COPY --from=builder /extracted/snapshot-dependencies/ ./
+COPY --from=builder /extracted/application/ ./
+
+# Expose port 8080 for the application
+EXPOSE 8080
+
+# Set the entrypoint to run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
