@@ -1,5 +1,5 @@
-# Use OpenJDK 21 as the base image
-FROM openjdk:21 as builder
+# Use EclipseAdoptium.Temurin.21.JDK as the base image for the builder stage
+FROM EclipseAdoptium.Temurin.21.JDK as builder
 
 # Set the working directory
 WORKDIR /extracted
@@ -10,8 +10,8 @@ COPY target/*.jar app.jar
 # Extract the JAR file to prepare for the final image
 RUN java -Djarmode=layertools -jar app.jar extract
 
-# Use OpenJDK 21 as the base image for the final image
-FROM openjdk:21
+# Use EclipseAdoptium.Temurin.21.JRE as the base image for the final image
+FROM EclipseAdoptium.Temurin.21.JRE
 
 # Set the working directory
 WORKDIR /application
@@ -26,4 +26,4 @@ COPY --from=builder /extracted/application/ ./
 EXPOSE 8080
 
 # Set the entrypoint to run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-cp", "app.jar", "org.springframework.boot.loader.JarLauncher"]
